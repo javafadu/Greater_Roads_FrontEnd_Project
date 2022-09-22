@@ -1,12 +1,11 @@
 import React from "react";
-import { Button } from "react-bootstrap";
+import CustomRoutes from "./router/custom-routes";
 
 const App = () => {
   return (
-    <div>
-      Hello GreaterRoads
-      <Button varient="primary">Buton</Button>
-    </div>
+    <>
+      <CustomRoutes />
+    </>
   );
 };
 
