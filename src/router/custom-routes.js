@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import LoadingPage from "../pages/common/loading-page";
 import NotFoundPage from "../pages/common/not-found-page";
 import UnauthorizedPage from "../pages/common/unauthorized-page";
 import AboutPage from "../pages/users/about-page";
@@ -94,6 +95,15 @@ const CustomRoutes = () => {
             }
           />
         </Route>
+
+        <Route
+          path="loading"
+          element={
+            <UserTemplate>
+              <LoadingPage />
+            </UserTemplate>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );
