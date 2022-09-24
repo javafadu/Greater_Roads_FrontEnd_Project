@@ -1,5 +1,5 @@
 import React from "react";
-import Footer from "../components/users/common/header/footer";
+import Footer from "../components/users/common/footer/footer";
 import Header from "../components/users/common/header/header";
 
 const UserTemplate = (props) => {
