@@ -7,8 +7,8 @@ const Slider = () => {
   return (
     <div className="slider">
       <Carousel>
-        {sliderData.map((item) => (
-          <Carousel.Item>
+        {sliderData.map((item, index) => (
+          <Carousel.Item key={index}>
             <img
               className=""
               src={require(`../../../../assets/img/slider/${item.image}`)}
