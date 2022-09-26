@@ -7,12 +7,16 @@ import VehicleBar from "./vehicle-bar";
 
 const PopularVehicles = () => {
   const [vehicles, setVehicles] = useState([]);
+  const [activeVehicle, setActiveVehicle] = useState({});
   const [loading, setLoading] = useState(true);
 
   const loadData = async () => {
     try {
       const resp = await getVehiclesByPage();
-      setVehicles(resp.data.content);
+      const data = resp.data.content;
+
+      setVehicles(data);
+      if (data.length > 0) setActiveVehicle(data[0]);
     } catch (err) {
       console.log(err);
     } finally {
@@ -36,8 +40,12 @@ const PopularVehicles = () => {
         <Loading />
       ) : (
         <>
-          <VehicleBar vehicles={vehicles} />
-          <PopularVehicle />
+          <VehicleBar
+            vehicles={vehicles}
+            activeVehicle={activeVehicle}
+            setActiveVehicle={setActiveVehicle}
+          />
+          <PopularVehicle activeVehicle={activeVehicle} />
         </>
       )}
     </div>

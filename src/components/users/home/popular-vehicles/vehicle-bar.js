@@ -1,28 +1,46 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Container } from "react-bootstrap";
 import { Swiper, SwiperSlide } from "swiper/react";
+import "./vehicle-bar.scss";
+import { IoIosArrowDropleft, IoIosArrowDropright } from "react-icons/io";
 
 const VehicleBar = (props) => {
-  const { vehicles } = props;
+  const { vehicles, activeVehicle, setActiveVehicle } = props;
+  const swiperRef = useRef(null);
+
+  const handlePrev = () => {
+
+  }
+
+  const handleRight = () => {
+
+  }
 
   return (
-    <Container className="vehicle-bar">
+    <Container className="vehicle-bar" onClick={handlePrev}>
+      <div className="arrow-left">
+        <IoIosArrowDropleft />
+      </div>
       <Swiper
-        spaceBetween={50}
-        slidesPerView={3}
+        ref={swiperRef}
+        spaceBetween={20}
+        slidesPerView={5}
         onSlideChange={() => console.log("slide change")}
         onSwiper={(swiper) => console.log(swiper)}
       >
-        <SwiperSlide>Slide 1</SwiperSlide>
-        <SwiperSlide>Slide 1</SwiperSlide>
-        <SwiperSlide>Slide 1</SwiperSlide>
-        <SwiperSlide>Slide 1</SwiperSlide>
-        ...
+        {vehicles.map((vehicle) => (
+          <SwiperSlide
+            className={vehicle.id === activeVehicle.id ? "active" : ""}
+            onClick={() => setActiveVehicle(vehicle)}
+            key={vehicle.id}
+          >
+            {vehicle.model}
+          </SwiperSlide>
+        ))}
       </Swiper>
-
-      {vehicles.map((vehicle) => (
-        <div>{vehicle.model}</div>
-      ))}
+      <div className="arrow-right" onClick={handleRight}>
+        <IoIosArrowDropright />
+      </div>
     </Container>
   );
 };
