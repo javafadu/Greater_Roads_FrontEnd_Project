@@ -3,6 +3,10 @@
 
 .popular-vehicle{
 
+    @media (max-width: 767px) {
+        text-align: center;
+    }
+
     img {
         transform: scaleX(-1) scale(1.2);
     }
