@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getVehiclesByPage } from "../../../../api/vehicle-service";
 import Loading from "../../../common/loading/loading";
+import Spacer from "../../../common/spacer/spacer";
 import SectionHeader from "../../common/section-header/section-header";
 import PopularVehicle from "./popular-vehicle";
 import VehicleBar from "./vehicle-bar";
@@ -35,6 +36,8 @@ const PopularVehicles = () => {
         subTitle="Lux &amp; economic"
         desc="To contribute to positive change and achieve our sustainability goals with many extraordinary"
       />
+
+      <Spacer height={30} />
 
       {loading ? (
         <Loading />

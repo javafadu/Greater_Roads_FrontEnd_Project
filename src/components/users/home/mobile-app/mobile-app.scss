@@ -7,6 +7,20 @@
     .store{
         display: flex;
         justify-content: space-between;
+
+        @media (max-width: 500px) {
+            img{
+                width:150px;
+                height: auto;
+            }
+        }
+
+        @media (max-width: 350px) {
+            img{
+                width:120px;
+                height: auto;
+            }
+        }
     }
 
     [class^="col-"]:last-child{

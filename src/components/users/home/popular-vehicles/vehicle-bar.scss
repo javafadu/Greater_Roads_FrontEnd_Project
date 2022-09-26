@@ -22,7 +22,7 @@
 
     }
 
-    .arrow-left, .arrow-right {
+    .arrow {
         background-color: v.$color3;
         border-radius: 50%;
         font-size:3rem;
@@ -36,6 +36,14 @@
             box-shadow: 0 0 10px v.$color1;
             
         }
+    }
+
+    .passive {
+        color: v.$color4;
+        box-shadow: 0 0 10px v.$color4;
+        cursor: auto;
+        pointer-events: none;
+
     }
 
 }
