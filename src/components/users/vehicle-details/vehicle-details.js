@@ -1,16 +1,16 @@
 import React from "react";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Badge, Container, Row, Col, Card } from "react-bootstrap";
 import { RiGasStationFill, RiCarLine, RiCaravanLine } from "react-icons/ri";
 import { IoIosSnow } from "react-icons/io";
 import { MdOutlineAirlineSeatReclineExtra } from "react-icons/md";
 import { GiJoystick, GiCalendarHalfYear } from "react-icons/gi";
-import "./popular-vehicle.scss";
-import Spacer from "../../../common/spacer/spacer";
-import { getVehicleImage } from "../../../../utils/functions/vehicle";
-import { Link } from "react-router-dom";
+import { getVehicleImage } from "../../../utils/functions/vehicle";
+import Spacer from "../../common/spacer/spacer";
+import { useSelector } from "react-redux";
 
-const PopularVehicle = (props) => {
-  const { activeVehicle } = props;
+const VehicleDetails = () => {
+  const vehicle = useSelector((state) => state.reservation.vehicle);
+
   const {
     image,
     model,
@@ -23,21 +23,25 @@ const PopularVehicle = (props) => {
     pricePerHour,
     seats,
     transmission,
-  } = activeVehicle;
+  } = vehicle;
 
   return (
-    <Container className="popular-vehicle">
+    <Container>
       <Row className="g-5">
         <Col md={8}>
-          <img src={getVehicleImage(image)} className="img-fluid" alt={model} />
-        </Col>
-        <Col md={4}>
-          <h2>
-            <sup>$</sup>
-            <span>{pricePerHour}</span>
-          </h2>
-          <p>rent per hour</p>
+          <div className="title">
+            <h1>{model}</h1>
+            <h3>
+              <Badge bg="primary">${pricePerHour}/hour</Badge>
+            </h3>
+          </div>
 
+          <Card>
+            <img src={getVehicleImage(image)} className="img-fluid" />
+          </Card>
+          <Spacer height={30} />
+
+          <h2>Property Highlights</h2>
           <ul>
             <li>
               <RiCarLine /> Model: {model}
@@ -67,14 +71,11 @@ const PopularVehicle = (props) => {
               <GiCalendarHalfYear /> Age: {age}
             </li>
           </ul>
-          <Spacer height={30} />
-          <Button variant="primary" as={Link} to={`/vehicles/${id}`}>
-            Rent Now
-          </Button>
         </Col>
+        <Col md={4}></Col>
       </Row>
     </Container>
   );
 };
 
-export default PopularVehicle;
+export default VehicleDetails;

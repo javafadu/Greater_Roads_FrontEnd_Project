@@ -1,5 +1,6 @@
 import React from "react";
 import { Button, Card } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import { getVehicleImage } from "../../../utils/functions/vehicle";
 import "./vehicle-card.scss";
 
@@ -17,8 +18,12 @@ const VehicleCard = (props) => {
         </Card.Text>
       </Card.Body>
       <Card.Footer>
-        <Button variant="dark">Rent Car</Button>
-        <Button variant="primary">Details</Button>
+        <Button variant="dark" as={Link} to={`/vehicles/${id}`}>
+          Rent Car
+        </Button>
+        <Button variant="primary" as={Link} to={`/vehicles/${id}`}>
+          Details
+        </Button>
       </Card.Footer>
     </Card>
   );

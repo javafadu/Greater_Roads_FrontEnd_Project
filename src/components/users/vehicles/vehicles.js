@@ -7,6 +7,7 @@ import Loading from "../../common/loading/loading";
 import Spacer from "../../common/spacer/spacer";
 import SectionHeader from "../common/section-header/section-header";
 import VehicleCard from "./vehicle-card";
+import "./vehicles.scss";
 
 const Vehicles = () => {
   const [vehicles, setVehicles] = useState([]);
@@ -68,8 +69,8 @@ const Vehicles = () => {
           </Row>
 
           {pagination.totalPages > 1 && (
-            <Row className="mt-5 justify-content-center">
-              <Pagination style={{ width: "auto", minWidth: 0 }}>
+            <Row className="vehicles-pagination">
+              <Pagination>
                 <Pagination.First
                   onClick={() => loadData(0)}
                   disabled={pagination.pageable.pageNumber <= 0}
