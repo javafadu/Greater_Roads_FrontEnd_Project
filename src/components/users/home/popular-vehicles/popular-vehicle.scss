@@ -3,37 +3,41 @@
 
 .popular-vehicle{
 
+
     @media (max-width: 767px) {
         text-align: center;
     }
 
-    img {
+
+    img{
         transform: scaleX(-1) scale(1.2);
     }
 
-    h2 {
+    h2{
         font-size: 3rem;
         font-weight: 800;
 
-        sup {
+        sup{
             font-weight: 600;
             top:-0.8rem;
-            font-size:2rem;
+            font-size: 2rem;
         }
     }
-    p {
+
+    p{
         border-bottom: 1px solid v.$color3;
     }
 
-    ul {
+    ul{
         @include m.reset-list();
-        li {
+        li{
             line-height: 2rem;
             font-size: 1.1rem;
-
             svg{
                 color: v.$color1;
             }
         }
     }
+
+
 }

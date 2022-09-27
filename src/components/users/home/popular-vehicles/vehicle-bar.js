@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container } from "react-bootstrap";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { IoIosArrowDropleft, IoIosArrowDropright } from "react-icons/io";
@@ -7,6 +7,8 @@ import { useRef } from "react";
 
 const VehicleBar = (props) => {
   const { vehicles, activeVehicle, setActiveVehicle } = props;
+  const [isEnd, setIsEnd] = useState(false);
+  const [isBeginning, setIsBeginning] = useState(true);
   const swiperRef = useRef(null);
 
   const handlePrev = () => {
@@ -17,37 +19,44 @@ const VehicleBar = (props) => {
     swiperRef.current.swiper.slideNext();
   };
 
+  const handleChange = (e) => {
+    setIsBeginning(e.isBeginning);
+    setIsEnd(e.isEnd);
+  };
+
   return (
     <Container className="vehicle-bar">
-      <div className={`arrow`} onClick={handlePrev}>
+      <div
+        className={`arrow ${isBeginning ? "passive" : ""}`}
+        onClick={handlePrev}
+      >
         <IoIosArrowDropleft />
       </div>
       <Swiper
+        onSlideChange={handleChange}
         ref={swiperRef}
-        onSlideChange={() => console.log("slide change")}
-        onSwiper={(swiper) => console.log(swiper)}
-        breakpoints= {{
-          0:{
-              spaceBetween:10,
-              slidesPerView:1
+        breakpoints={{
+          0: {
+            spaceBetween: 10,
+            slidesPerView: 1,
           },
-          576:{
-              spaceBetween:20,
-              slidesPerView:2
+          576: {
+            spaceBetween: 20,
+            slidesPerView: 2,
           },
-          768:{
-              spaceBetween:20,
-              slidesPerView:3
+          768: {
+            spaceBetween: 20,
+            slidesPerView: 3,
           },
-          992:{
-              spaceBetween:20,
-              slidesPerView:5
+          992: {
+            spaceBetween: 20,
+            slidesPerView: 5,
           },
-          1200:{
-              spaceBetween:20,
-              slidesPerView:6
-          }
-      }}
+          1200: {
+            spaceBetween: 20,
+            slidesPerView: 6,
+          },
+        }}
       >
         {vehicles.map((vehicle) => (
           <SwiperSlide
@@ -59,7 +68,7 @@ const VehicleBar = (props) => {
           </SwiperSlide>
         ))}
       </Swiper>
-      <div className="arrow" onClick={handleNext}>
+      <div className={`arrow ${isEnd ? "passive" : ""}`} onClick={handleNext}>
         <IoIosArrowDropright />
       </div>
     </Container>

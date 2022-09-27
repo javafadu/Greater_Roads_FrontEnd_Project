@@ -7,6 +7,7 @@ import { MdOutlineAirlineSeatReclineExtra } from "react-icons/md";
 import { GiJoystick, GiCalendarHalfYear } from "react-icons/gi";
 import "./popular-vehicle.scss";
 import Spacer from "../../../common/spacer/spacer";
+import { getVehicleImage } from "../../../../utils/functions/vehicle";
 
 const PopularVehicle = (props) => {
   const { activeVehicle } = props;
@@ -28,11 +29,7 @@ const PopularVehicle = (props) => {
     <Container className="popular-vehicle">
       <Row className="g-5">
         <Col md={8}>
-          <img
-            src={`${settings.apiURL}/files/display/${image[0]}`}
-            className="img-fluid"
-            alt={model}
-          />
+          <img src={getVehicleImage(image)} className="img-fluid" alt={model} />
         </Col>
         <Col md={4}>
           <h2>

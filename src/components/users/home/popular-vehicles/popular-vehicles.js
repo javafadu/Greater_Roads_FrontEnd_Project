@@ -36,18 +36,13 @@ const PopularVehicles = () => {
         subTitle="Lux &amp; economic"
         desc="To contribute to positive change and achieve our sustainability goals with many extraordinary"
       />
-
-      <Spacer height={30} />
-
+        <Spacer height={30}/>
       {loading ? (
         <Loading />
       ) : (
         <>
-          <VehicleBar
-            vehicles={vehicles}
-            activeVehicle={activeVehicle}
-            setActiveVehicle={setActiveVehicle}
-          />
+          <VehicleBar vehicles={vehicles} activeVehicle={activeVehicle} setActiveVehicle={setActiveVehicle}/>
+          <Spacer height={50}/>
           <PopularVehicle activeVehicle={activeVehicle} />
         </>
       )}
