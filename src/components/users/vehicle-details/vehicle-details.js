@@ -7,6 +7,8 @@ import { GiJoystick, GiCalendarHalfYear } from "react-icons/gi";
 import { getVehicleImage } from "../../../utils/functions/vehicle";
 import Spacer from "../../common/spacer/spacer";
 import { useSelector } from "react-redux";
+import "./vehicle-details.scss";
+import BookingForm from "./booking-form";
 
 const VehicleDetails = () => {
   const vehicle = useSelector((state) => state.reservation.vehicle);
@@ -26,7 +28,7 @@ const VehicleDetails = () => {
   } = vehicle;
 
   return (
-    <Container>
+    <Container className="vehicle-details">
       <Row className="g-5">
         <Col md={8}>
           <div className="title">
@@ -72,7 +74,9 @@ const VehicleDetails = () => {
             </li>
           </ul>
         </Col>
-        <Col md={4}></Col>
+        <Col md={4}>
+          <BookingForm />
+        </Col>
       </Row>
     </Container>
   );

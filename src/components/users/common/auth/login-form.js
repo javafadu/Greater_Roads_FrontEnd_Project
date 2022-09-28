@@ -1,18 +1,48 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Spinner } from "react-bootstrap";
 import * as Yup from "yup";
 import PasswordInput from "../../../common/password-input/password-input";
+import { getUser, login } from "../../../../api/user-service";
+import { toast } from "../../../../utils/functions/swal";
+import secureLocalStorage from "react-secure-storage";
+import { useDispatch } from "react-redux";
+import { loginFailed, loginSuccess } from "../../../../store/slices/auth-slice";
+import { useNavigate } from "react-router-dom";
+
 const LoginForm = () => {
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const initialValues = {
     email: "",
     password: "",
   };
+
   const validationSchema = Yup.object({
-    email: Yup.string().required("Please enter your email"),
+    email: Yup.string().email().required("Please enter your email"),
     password: Yup.string().required("Please enter your password"),
   });
-  const onSubmit = (values) => {};
+
+  const onSubmit = async (values) => {
+    setLoading(true);
+    try {
+      const respAuth = await login(values);
+      secureLocalStorage.setItem("token", respAuth.data.token);
+
+      const respUser = await getUser();
+      console.log(respUser.data);
+      dispatch(loginSuccess(respUser.data));
+      navigate(-1); // Önceki sayfaya yönlendirir.
+    } catch (err) {
+      dispatch(loginFailed());
+      toast(err.response.data.message, "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const formik = useFormik({
     initialValues,
     validationSchema,
@@ -41,8 +71,8 @@ const LoginForm = () => {
           error={formik.errors.password}
         />
       </Form.Group>
-      <Button variant="primary" type="submit">
-        Login
+      <Button variant="primary" type="submit" disabled={loading}>
+        {loading && <Spinner animation="border" size="sm" />} Login
       </Button>
     </Form>
   );
