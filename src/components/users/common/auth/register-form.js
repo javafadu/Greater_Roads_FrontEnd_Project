@@ -1,10 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import InputMask from "react-input-mask-next";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Spinner } from "react-bootstrap";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import PasswordInput from "../../../common/password-input/password-input";
+import { register } from "../../../../api/user-service";
+import { toast } from "../../../../utils/functions/swal";
+
 const RegisterForm = ({ setDefaultTab }) => {
+  const [loading, setLoading] = useState(false);
+
   const initialValues = {
     firstName: "",
     lastName: "",
@@ -35,7 +40,19 @@ const RegisterForm = ({ setDefaultTab }) => {
       .oneOf([Yup.ref("password")], "Password fields doesn't match"),
   });
 
-  const onSubmit = (values) => {};
+  const onSubmit = async (values) => {
+    setLoading(true);
+    try {
+      const resp = await register(values);
+      toast("You're registered successfully!", "success");
+      formik.resetForm();
+      setDefaultTab("login");
+    } catch (err) {
+      toast(err.response.data.message, "error");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const formik = useFormik({
     initialValues,
@@ -141,8 +158,8 @@ const RegisterForm = ({ setDefaultTab }) => {
           error={formik.errors.confirmPassword}
         />
       </Form.Group>
-      <Button variant="primary" type="submit">
-        Register
+      <Button variant="primary" type="submit" disabled={loading}>
+        {loading && <Spinner animation="border" size="sm" />} Register
       </Button>
     </Form>
   );

@@ -6,13 +6,17 @@ import { RiCloseCircleLine, RiHome7Line } from "react-icons/ri";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import LoginForm from "./login-form";
 import RegisterForm from "./register-form";
+import { useEffect } from "react";
 
 const Auth = () => {
   const [searchParams] = useSearchParams();
-  const [defaultTab, setDefaultTab] = useState(
-    searchParams.get("type") || "login"
-  );
+
+  const [defaultTab, setDefaultTab] = useState("login");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setDefaultTab(searchParams.get("type") || "login");
+  }, [searchParams]);
 
   return (
     <Container fluid className="auth">
@@ -20,8 +24,8 @@ const Auth = () => {
         <Col lg={7}>
           <img src={logo} alt="TRVLCar" />
           <div className="toolbar">
-            <RiCloseCircleLine onClick={() => navigate(-1)} />
-            {/*  (-1) previous page */}
+            <RiCloseCircleLine onClick={() => navigate(-1)} />{" "}
+            {/* Tıklandığında bir önceki sayfaya yönlendirir */}
             <RiHome7Line onClick={() => navigate("/")} />
           </div>
         </Col>

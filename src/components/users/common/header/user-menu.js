@@ -50,10 +50,10 @@ const UserMenu = () => {
         </Dropdown>
       ) : (
         <div>
-          <Button variant="white" as={Link} to="/auth">
+          <Button variant="white" as={Link} to="/auth?type=login">
             Signin
           </Button>
-          <Button variant="primary" as={Link} to="/auth">
+          <Button variant="primary" as={Link} to="/auth?type=register">
             Register
           </Button>
         </div>

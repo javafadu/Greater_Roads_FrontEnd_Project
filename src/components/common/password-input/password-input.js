@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Form, InputGroup } from "react-bootstrap";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
+import "./password-input.scss";
 
 const PasswordInput = (props) => {
   const [type, setType] = useState("password");
@@ -10,7 +11,7 @@ const PasswordInput = (props) => {
   };
 
   return (
-    <InputGroup className="mb-3">
+    <InputGroup className="mb-3 password-input">
       <Form.Control type={type} {...props} />
 
       <InputGroup.Text id="basic-addon2">
