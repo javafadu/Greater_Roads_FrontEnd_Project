@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Buffer } from "buffer";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { RiGasStationFill, RiCarLine, RiCaravanLine } from "react-icons/ri";
 import { IoIosSnow } from "react-icons/io";
@@ -8,6 +9,7 @@ import "./popular-vehicle.scss";
 import Spacer from "../../../common/spacer/spacer";
 import { Link } from "react-router-dom";
 import { getVehicleImage } from "../../../../api/vehicle-service";
+import Loading from "../../../common/loading/loading";
 
 const PopularVehicle = (props) => {
   const [loading, setLoading] = useState(false);
@@ -29,11 +31,10 @@ const PopularVehicle = (props) => {
   } = activeVehicle;
 
   const loadImage = async () => {
-    console.log(image);
+    if (!image) return;
     setLoading(true);
     try {
       const resp = await getVehicleImage(image);
-      console.log(resp);
       let imageBase64 = Buffer.from(resp.data).toString("base64");
       setImageSrc(`data:${resp.headers["content-type"]};base64,${imageBase64}`);
     } catch (err) {
@@ -51,7 +52,11 @@ const PopularVehicle = (props) => {
     <Container className="popular-vehicle">
       <Row className="g-5">
         <Col md={8}>
-          <img src={imageSrc} className="img-fluid" alt={model} />
+          {loading ? (
+            <Loading />
+          ) : (
+            <img src={imageSrc} className="img-fluid" alt={model} />
+          )}
         </Col>
         <Col md={4}>
           <h2>
