@@ -32,7 +32,7 @@ const LoginForm = () => {
       secureLocalStorage.setItem("token", respAuth.data.token);
 
       const respUser = await getUser();
-      console.log(respUser.data);
+
       dispatch(loginSuccess(respUser.data));
       navigate(-1); // Önceki sayfaya yönlendirir.
     } catch (err) {

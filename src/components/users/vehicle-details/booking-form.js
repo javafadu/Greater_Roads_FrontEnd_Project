@@ -12,7 +12,10 @@ import {
 import SectionHeader from "../common/section-header/section-header";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { isVehicleAvailable } from "../../../api/reservation-service";
+import {
+  createReservation,
+  isVehicleAvailable,
+} from "../../../api/reservation-service";
 import { useSelector } from "react-redux";
 import {
   checkDates,
@@ -23,6 +26,7 @@ import {
 } from "../../../utils/functions/date-time";
 import { toast } from "../../../utils/functions/swal";
 import InputMask from "react-input-mask-next";
+import { useNavigate } from "react-router-dom";
 
 const BookingForm = () => {
   const vehicle = useSelector((state) => state.reservation.vehicle);
@@ -30,6 +34,7 @@ const BookingForm = () => {
   const [carAvailable, setCarAvailable] = useState(false);
   const [totalPrice, setTotalPrice] = useState();
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const initialValues = {
     pickUpLocation: "",
@@ -70,8 +75,35 @@ const BookingForm = () => {
     ),
   });
 
-  const onSubmit = (values) => {
-    console.log(values);
+  const onSubmit = async (values) => {
+    const {
+      pickUpDate,
+      pickUpTime,
+      dropOffDate,
+      dropOffTime,
+      pickUpLocation,
+      dropOffLocation,
+    } = values;
+
+    setLoading(true);
+
+    try {
+      const dto = {
+        pickUpTime: combineDateAndTime(pickUpDate, pickUpTime),
+        dropOffTime: combineDateAndTime(dropOffDate, dropOffTime),
+        pickUpLocation: pickUpLocation,
+        dropOffLocation: dropOffLocation,
+      };
+
+      await createReservation(vehicle.id, dto);
+      toast("Reservation created", "success");
+      formik.resetForm();
+      navigate("/");
+    } catch (err) {
+      toast(err.response.data.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const formik = useFormik({
