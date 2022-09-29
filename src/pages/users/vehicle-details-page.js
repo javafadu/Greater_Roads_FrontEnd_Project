@@ -31,7 +31,7 @@ const VehicleDetailsPage = () => {
 
   return (
     <>
-      <PageHeader title={vehicle.model}/>
+      <PageHeader title={vehicle?.model} />
       <Spacer />
       {loading ? <Loading /> : <VehicleDetails />}
 

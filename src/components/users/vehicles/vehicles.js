@@ -16,7 +16,7 @@ const Vehicles = () => {
 
   const loadData = async (page) => {
     try {
-      const resp = await getVehiclesByPage(page, 5);
+      const resp = await getVehiclesByPage(page, 8);
       console.log(resp.data);
 
       const {
