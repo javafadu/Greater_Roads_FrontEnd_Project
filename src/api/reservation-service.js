@@ -31,4 +31,9 @@ const getReservation = (id) => {
   });
 };
 
-export { isVehicleAvailable, createReservation, getReservations, getReservation };
+export {
+  isVehicleAvailable,
+  createReservation,
+  getReservations,
+  getReservation,
+};

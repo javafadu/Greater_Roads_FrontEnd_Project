@@ -120,7 +120,7 @@ const BookingForm = () => {
     try {
       if (!checkDates(formik.values))
         throw new Error(
-          "Drop-off date should get at least 1 hour later the pick-up date"
+          "Drop-off date should be at least 1 hour after the pick-up time"
         );
 
       const dto = {
@@ -138,7 +138,7 @@ const BookingForm = () => {
 
       if (!available)
         throw new Error(
-          "The vehicle you selected is not avilable. Please select different date"
+          "The vehicle you selected is not available. Please check another date"
         );
     } catch (err) {
       // err.message
@@ -163,7 +163,7 @@ const BookingForm = () => {
       <SectionHeader title="Booking Form" />
 
       {!isUserLogin && (
-        <Alert>Please login first to check the car is available.</Alert>
+        <Alert>Please login to check car availability</Alert>
       )}
 
       <Form noValidate onSubmit={formik.handleSubmit}>
