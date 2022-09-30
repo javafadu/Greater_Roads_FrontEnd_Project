@@ -7,6 +7,7 @@ import AuthPage from "../pages/users/auth-page";
 import ContactPage from "../pages/users/contact-page";
 import HomePage from "../pages/users/home-page";
 import PrivacyPolicyPage from "../pages/users/privacy-policy-page";
+import ProfilePage from "../pages/users/profile-page";
 import VehicleDetailsPage from "../pages/users/vehicle-details-page";
 import VehiclesPage from "../pages/users/vehicles-page";
 import UserTemplate from "../templates/user-template";
@@ -90,6 +91,16 @@ const CustomRoutes = () => {
               </UserTemplate>
             }
           />
+
+          <Route
+            path="profile"
+            element={
+              <UserTemplate>
+                <ProfilePage />
+              </UserTemplate>
+            }
+          />
+
           <Route
             path="*"
             element={
