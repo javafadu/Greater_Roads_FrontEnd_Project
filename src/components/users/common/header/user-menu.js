@@ -39,10 +39,10 @@ const UserMenu = () => {
               </>
             )}
 
-            <Dropdown.Item as={Link} to="/profile">
+            <Dropdown.Item as={Link} to="/user">
               Profile
             </Dropdown.Item>
-            <Dropdown.Item as={Link} to="/reservations">
+            <Dropdown.Item as={Link} to="/user/reservations">
               Reservations
             </Dropdown.Item>
             <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>

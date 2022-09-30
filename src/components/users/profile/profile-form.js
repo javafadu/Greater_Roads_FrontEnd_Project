@@ -1,11 +1,15 @@
 import { useFormik } from "formik";
+import { useDispatch } from "react-redux";
 import React, { useState } from "react";
 import { Button, Form, Spinner } from "react-bootstrap";
 import * as Yup from "yup";
 import ReactInputMask from "react-input-mask-next";
+import { updateUser } from "../../../api/user-service";
+import { toast } from "../../../utils/functions/swal";
 
 const ProfileForm = ({ user }) => {
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
   const initialValues = {
     firstName: user.firstName,
@@ -32,7 +36,17 @@ const ProfileForm = ({ user }) => {
   });
 
   const onSubmit = async (values) => {
-    console.log(values);
+    setLoading(true);
+    try {
+      await updateUser(values);
+      // if backend returns the updated user as Json we would write below code
+      // dispatch(userUpdate(resp.data));
+      toast("Your profile was updated successfully", "success");
+    } catch (err) {
+      toast(err.response.data.message, "error");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const formik = useFormik({
@@ -51,7 +65,9 @@ const ProfileForm = ({ user }) => {
           isInvalid={formik.touched.firstName && formik.errors.firstName}
           isValid={formik.touched.firstName && !formik.errors.firstName}
         />
-        <Form.Control.Feedback>{formik.errors.firsName}</Form.Control.Feedback>
+        <Form.Control.Feedback type="invalid">
+          {formik.errors.firsName}
+        </Form.Control.Feedback>
       </Form.Group>
 
       <Form.Group className="mb-3">
@@ -62,7 +78,9 @@ const ProfileForm = ({ user }) => {
           isInvalid={formik.touched.lastName && formik.errors.lastName}
           isValid={formik.touched.lastName && !formik.errors.lastName}
         />
-        <Form.Control.Feedback>{formik.errors.lastName}</Form.Control.Feedback>
+        <Form.Control.Feedback type="invalid">
+          {formik.errors.lastName}
+        </Form.Control.Feedback>
       </Form.Group>
 
       <Form.Group className="mb-3">
@@ -75,7 +93,7 @@ const ProfileForm = ({ user }) => {
           isInvalid={formik.touched.phoneNumber && formik.errors.phoneNumber}
           isValid={formik.touched.phoneNumber && !formik.errors.phoneNumber}
         />
-        <Form.Control.Feedback>
+        <Form.Control.Feedback type="invalid">
           {formik.errors.phoneNumber}
         </Form.Control.Feedback>
       </Form.Group>
@@ -88,7 +106,9 @@ const ProfileForm = ({ user }) => {
           isInvalid={formik.touched.address && formik.errors.address}
           isValid={formik.touched.address && !formik.errors.address}
         />
-        <Form.Control.Feedback>{formik.errors.address}</Form.Control.Feedback>
+        <Form.Control.Feedback type="invalid">
+          {formik.errors.address}
+        </Form.Control.Feedback>
       </Form.Group>
 
       <Form.Group className="mb-3">
@@ -99,7 +119,9 @@ const ProfileForm = ({ user }) => {
           isInvalid={formik.touched.zipCode && formik.errors.zipCode}
           isValid={formik.touched.zipCode && !formik.errors.zipCode}
         />
-        <Form.Control.Feedback>{formik.errors.zipCode}</Form.Control.Feedback>
+        <Form.Control.Feedback type="invalid">
+          {formik.errors.zipCode}
+        </Form.Control.Feedback>
       </Form.Group>
 
       <Form.Group className="mb-3">
