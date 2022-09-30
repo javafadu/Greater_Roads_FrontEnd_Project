@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import * as Yup from "yup";
 import { Form, Button, Spinner } from "react-bootstrap";
 import PasswordInput from "../../common/password-input/password-input";
+import { updatePassword } from "../../../api/user-service";
+import { toast } from "../../../utils/functions/swal";
 const PasswordForm = () => {
   const [loading, setLoading] = useState(false);
   const initialValues = {
@@ -23,9 +25,21 @@ const PasswordForm = () => {
       .required("Please re-enter your new password")
       .oneOf([Yup.ref("newPassword")], "Password fields doesn't match"),
   });
-  const onSubmit = (values) => {
-    console.log(values);
+
+  const onSubmit = async (values) => {
+    setLoading(true);
+
+    try {
+      await updatePassword(values);
+      toast("Your password has been changed successfully", "success");
+      formik.resetForm();
+    } catch (err) {
+      toast(err.response.data.message, "error");
+    } finally {
+      setLoading(false);
+    }
   };
+
   const formik = useFormik({
     initialValues,
     validationSchema,

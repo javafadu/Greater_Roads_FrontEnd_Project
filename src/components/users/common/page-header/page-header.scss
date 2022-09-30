@@ -30,8 +30,26 @@
             content:"...";
             font-size:4rem;
             opacity: 0.2;
+
+            @media (max-width: 600px) {
+               content:""
+            }
+    
         }
 
+    
+
+        @media (max-width: 500px) {
+            font-size: 3.5rem;
+        }
+
+        @media (max-width: 400px) {
+            font-size: 3rem;
+        }
+
+        @media (max-width: 350px) {
+            font-size: 2rem;
+        }
    
     }
 

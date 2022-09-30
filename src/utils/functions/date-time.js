@@ -29,3 +29,7 @@ export const checkDates = (dates) => {
 
   return date2 >= date1.add(1, "h");
 };
+
+export const formatDateTimeToLLL = (dateTime) => {
+  return moment(dateTime).format("lll");
+};
