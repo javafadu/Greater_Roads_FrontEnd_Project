@@ -5,6 +5,7 @@ import { getUser } from "./api/user-service";
 import LoadingPage from "./pages/common/loading-page";
 import CustomRoutes from "./router/custom-routes";
 import { loginFailed, loginSuccess } from "./store/slices/auth-slice";
+import { settings } from "./utils/settings";
 
 const App = () => {
   const [loading, setLoading] = useState(true);
@@ -27,6 +28,7 @@ const App = () => {
 
   useEffect(() => {
     loadData();
+    document.title = `${settings.siteName} | Premimum Car Rental`;
   }, []);
 
   return <>{loading ? <LoadingPage /> : <CustomRoutes />}</>;

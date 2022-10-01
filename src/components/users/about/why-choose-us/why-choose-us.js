@@ -1,25 +1,23 @@
 import React from "react";
+import SectionHeader from "../../common/section-header/section-header";
 import "./why-choose-us.scss";
 import { Container, Row, Col, Button } from "react-bootstrap";
-import SectionHeader from "../../common/section-header/section-header";
 import { GiPayMoney, GiTakeMyMoney, GiVacuumCleaner } from "react-icons/gi";
-
+import { Link } from "react-router-dom";
 const WhyChooseUs = () => {
   return (
     <Container fluid className="why-choose-us">
       <img
         src={require("../../../../assets/img/bg/vehicles.png")}
-        alt="vehicles"
         className="img-fluid"
+        alt="vahicles"
       />
-
       <Container>
-        <Row>
+        <Row className="g-5">
           <Col md={6}>
             <SectionHeader
               title="Best valued deals you will ever find"
-              subTitle="Why Choose Us"
-              desc=""
+              subtitle="Why Choose Us"
             />
             <p>
               Whether you're flying into undefined for a short break or a longer
@@ -28,11 +26,15 @@ const WhyChooseUs = () => {
               us your travel dates and we'll show you which cars are available
               with the best prices.
             </p>
-            <Button className="btn-about" variant="primary">
+            <Button
+              className="btn-about"
+              variant="primary"
+              as={Link}
+              to="/vehicles"
+            >
               Rent Now
             </Button>
           </Col>
-
           <Col md={6}>
             <ul>
               <li>
@@ -47,20 +49,6 @@ const WhyChooseUs = () => {
                   </p>
                 </div>
               </li>
-
-              <li>
-                <div>
-                  <GiVacuumCleaner />
-                </div>
-                <div>
-                  <h3>Hygienic Cars</h3>
-                  <p>
-                    We disinfect our vehicles before giving them to you to keep
-                    you safe in the driver's seat.
-                  </p>
-                </div>
-              </li>
-
               <li>
                 <div>
                   <GiTakeMyMoney />
@@ -70,6 +58,18 @@ const WhyChooseUs = () => {
                   <p>
                     You will not encounter surprise payments. You know exactly
                     what you're paying for.
+                  </p>
+                </div>
+              </li>
+              <li>
+                <div>
+                  <GiVacuumCleaner />
+                </div>
+                <div>
+                  <h3>Hygienic Cars</h3>
+                  <p>
+                    We disinfect our vehicles before giving them to you to keep
+                    you safe in the driver's seat.
                   </p>
                 </div>
               </li>
