@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../../../../store/slices/auth-slice";
 import { question } from "../../../../utils/functions/swal";
 import "./user-menu.scss";
+import secureLocalStorage from "react-secure-storage";
 
 const UserMenu = () => {
   const { isUserLogin, user } = useSelector((state) => state.auth);
@@ -15,7 +16,7 @@ const UserMenu = () => {
     question("Are you sure to logout?").then((result) => {
       if (result.isConfirmed) {
         dispatch(logout());
-        // localSTOREGE boşaltılacak;
+        secureLocalStorage.removeItem("token");
         navigate("/");
       }
     });

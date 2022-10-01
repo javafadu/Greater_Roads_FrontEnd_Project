@@ -12,7 +12,7 @@ const AdminTemplate = (props) => {
           <SideBar />
         </Col>
         <Col lg={9}>
-          <Container>{children}</Container>
+          <Container className="pt-5">{children}</Container>
         </Col>
       </Row>
     </Container>

@@ -1,8 +1,12 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+
 import ScrollToTop from "../components/common/scroll-to-top/scroll-to-top";
 import AdminDashboardPage from "../pages/admins/admin-dashboard-page";
 import AdminUserEditPage from "../pages/admins/admin-user-edit-page";
+import AdminUsersPage from "../pages/admins/admin-users-page";
+import AdminVehiclesEditPage from "../pages/admins/admin-vehicle-edit-page";
+import AdminVehiclesPage from "../pages/admins/admin-vehicles-page";
 import NotFoundPage from "../pages/common/not-found-page";
 import UnauthorizedPage from "../pages/common/unauthorized-page";
 import AboutPage from "../pages/users/about-page";
@@ -146,15 +150,50 @@ const CustomRoutes = () => {
                 </ProtectedRoute>
               }
             />
-
-            <Route
-              path="edit"
-              element={
-                <AdminTemplate>
-                  <AdminUserEditPage />
-                </AdminTemplate>
-              }
-            />
+            <Route path="users">
+              <Route
+                index
+                element={
+                  <ProtectedRoute admin={true}>
+                    <AdminTemplate>
+                      <AdminUsersPage />
+                    </AdminTemplate>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path=":userId"
+                element={
+                  <ProtectedRoute admin={true}>
+                    <AdminTemplate>
+                      <AdminUserEditPage />
+                    </AdminTemplate>
+                  </ProtectedRoute>
+                }
+              />
+            </Route>
+            <Route path="vehicles">
+              <Route
+                index
+                element={
+                  <ProtectedRoute admin={true}>
+                    <AdminTemplate>
+                      <AdminVehiclesPage />
+                    </AdminTemplate>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path=":vehicleId"
+                element={
+                  <ProtectedRoute admin={true}>
+                    <AdminTemplate>
+                      <AdminVehiclesEditPage />
+                    </AdminTemplate>
+                  </ProtectedRoute>
+                }
+              />
+            </Route>
           </Route>
 
           <Route

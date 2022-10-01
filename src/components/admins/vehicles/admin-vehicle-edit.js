@@ -12,38 +12,43 @@ import {
 } from "react-bootstrap";
 import * as Yup from "yup";
 import ReactInputMask from "react-input-mask-next";
-import { getUserById } from "../../../api/user-service";
+import { getVehicle } from "../../../api/vehicle-service";
 
-const AdminUserEdit = () => {
+const AdminVehicleEdit = () => {
   const [saving, setSaving] = useState(false);
   const [deleting, setdeleting] = useState(false);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const { userId } = useParams();
+  const { vehicleId } = useParams();
 
   const [initialValues, setInitialValues] = useState({
-    firstName: "",
-    lastName: "",
-    phoneNumber: "",
-    email: "",
-    address: "",
-    zipCode: "",
-    userName: "",
-    password: "",
-    roles: [],
+    model: "",
+    doors: "",
+    seats: "",
+    luggage: "",
+    transmission: "",
+    airConditioning: "",
+    age: "",
+    pricePerHour: "",
+    fuelType: "",
     builtIn: false,
+    image: "",
   });
 
   const validationSchema = Yup.object({
-    firstName: Yup.string().required("Please enter your first name"),
-    lastName: Yup.string().required("Please enter your last name"),
-    phoneNumber: Yup.string("Please enter your phone number").required(),
-    email: Yup.string().email().required("Please enter your email"),
+    model: Yup.string().required("Please enter model"),
+    doors: Yup.number().required("Please enter doors number"),
+    seats: Yup.number("Please enter seat number").required(),
+    luggage: Yup.number().required("Please enter luggage capacity"),
 
-    address: Yup.string().required("Please enter your address"),
-    zipCode: Yup.string().required("Please enter your zip code"),
-    roles: Yup.array().required("Please select a role"),
-    password: Yup.string(),
+    transmission: Yup.string().required("Please enter transmission type"),
+    airConditioning: Yup.bool().required(
+      "Please set airConditioning true or false"
+    ),
+    age: Yup.number().required("Please enter age of vehicle"),
+    pricePerHour: Yup.number().required("Please enter price per hour"),
+    fuelType: Yup.string().required("Please enter fuelType"),
+    image: Yup.string().required("Please enter fuelType"),
   });
 
   const onSubmit = () => {};
@@ -57,9 +62,9 @@ const AdminUserEdit = () => {
 
   const loadData = async () => {
     try {
-      const resp = await getUserById(userId);
+      const resp = await getVehicle(vehicleId);
       console.log(resp.data);
-      setInitialValues({ ...resp.data, password: "" });
+      setInitialValues({ ...resp.data, image: "" });
     } catch (err) {
       console.log(err);
     } finally {
@@ -75,12 +80,12 @@ const AdminUserEdit = () => {
     <Form noValidate onSubmit={formik.handleSubmit}>
       <Row>
         <Form.Group as={Col} md={6} lg={4} className="mb-3">
-          <Form.Label>First Name</Form.Label>
+          <Form.Label>Model</Form.Label>
           <Form.Control
             type="text"
-            {...formik.getFieldProps("firstName")}
-            isInvalid={formik.touched.firstName && formik.errors.firstName}
-            isValid={formik.touched.firstName && !formik.errors.firstName}
+            {...formik.getFieldProps("model")}
+            isInvalid={formik.touched.model && formik.errors.model}
+            isValid={formik.touched.model && !formik.errors.model}
           />
           <Form.Control.Feedback type="invalid">
             {formik.errors.firstName}
@@ -219,4 +224,4 @@ const AdminUserEdit = () => {
   );
 };
 
-export default AdminUserEdit;
+export default AdminVehicleEdit;

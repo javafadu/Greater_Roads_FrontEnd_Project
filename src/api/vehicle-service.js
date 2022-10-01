@@ -1,17 +1,18 @@
 import axios from "axios";
 import { settings } from "../utils/settings";
+import authHeader from "./auth-header";
 
 const API_URL = settings.apiURL;
 
-const getVehicles = () => {
+export const getVehicles = () => {
   return axios.get(`${API_URL}/car/visitors/all`);
 };
 
-const getVehicle = (id) => {
+export const getVehicle = (id) => {
   return axios.get(`${API_URL}/car/visitors/${id}`);
 };
 
-const getVehiclesByPage = (
+export const getVehiclesByPage = (
   page = 0,
   size = 10,
   sort = "model",
@@ -22,11 +23,22 @@ const getVehiclesByPage = (
   );
 };
 
-const getVehicleImage = (id) => {
+export const getVehicleImage = (id) => {
   if (Array.isArray(id)) id = id[0];
   return axios.get(`${settings.apiURL}/files/display/${id}`, {
     responseType: "arraybuffer",
   });
 };
 
-export { getVehicles, getVehicle, getVehiclesByPage, getVehicleImage };
+/* ADMIN SERVICES */
+
+export const downloadVehicles = () => {
+  return axios.get(`${API_URL}/excel/download/cars`, {
+    headers: {
+      ...authHeader(),
+      "Content-Type":
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    },
+    responseType: "blob",
+  });
+};

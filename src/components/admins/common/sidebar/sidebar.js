@@ -1,6 +1,6 @@
 import React from "react";
 import { Container, Nav, Navbar } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./sidebar.scss";
 import logo from "../../../../assets/img/logo/logo-white.png";
 import {
@@ -11,10 +11,27 @@ import {
   RiLogoutCircleRLine,
   RiDashboardLine,
 } from "react-icons/ri";
+import { logout } from "../../../../store/slices/auth-slice";
+import { question } from "../../../../utils/functions/swal";
+import secureLocalStorage from "react-secure-storage";
+import { useDispatch } from "react-redux";
 
 const SideBar = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    question("Are you sure to logout?").then((result) => {
+      if (result.isConfirmed) {
+        dispatch(logout());
+        secureLocalStorage.removeItem("token");
+        navigate("/");
+      }
+    });
+  };
+
   return (
-    <Navbar bg="light" expand="lg" className="admin-navbar">
+    <Navbar bg="dark" expand="lg" className="admin-navbar" variant="dark">
       <Container>
         <Navbar.Brand as={Link} to="/admin">
           <img src={logo} className="img-fluid" alt="Admin" />
@@ -40,8 +57,8 @@ const SideBar = () => {
             <Nav.Link as={Link} to="/">
               <RiHome3Line /> Web Site
             </Nav.Link>
-            <Nav.Link >
-              <RiLogoutCircleRLine/> Logout
+            <Nav.Link onClick={handleLogout}>
+              <RiLogoutCircleRLine /> Logout
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>

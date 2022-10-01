@@ -1,7 +1,12 @@
 import React from "react";
+import AdminVehicleEdit from "../../components/admins/vehicles/admin-vehicle-edit";
 
 const AdminVehiclesEditPage = () => {
-  return <div>AdminVehiclesEditPage</div>;
+  return (
+    <>
+      <AdminVehicleEdit />
+    </>
+  );
 };
 
 export default AdminVehiclesEditPage;
