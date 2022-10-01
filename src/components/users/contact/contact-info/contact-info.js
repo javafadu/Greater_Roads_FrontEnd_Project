@@ -5,7 +5,7 @@ import {
   MdLocationOn,
   MdEmail,
 } from "react-icons/md";
-import { settings } from "../../../utils/settings";
+import { settings } from "../../../../utils/settings";
 import "./contact-info.scss";
 
 const ContactInfo = () => {

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 import logo from "../../../../assets/img/logo/logo-white.png";
 import { settings } from "../../../../utils/settings";
-import ContactInfo from "../../contact/contact-info";
+import ContactInfo from "../../contact/contact-info/contact-info";
 import "./footer.scss";
 
 const Footer = () => {
