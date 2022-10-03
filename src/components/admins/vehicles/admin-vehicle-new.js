@@ -1,23 +1,30 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { Form, Button, Row, Col, ButtonGroup, Badge, Spinner, Alert } from "react-bootstrap";
+import {
+  Form,
+  Button,
+  Row,
+  Col,
+  ButtonGroup,
+  Badge,
+  Spinner,
+} from "react-bootstrap";
 import "./admin-vehicle.scss";
-import { createVehicle, getVehicle, uploadVehicleImage } from "../../../api/vehicle-service";
+import {
+  createVehicle,
+  uploadVehicleImage,
+} from "../../../api/vehicle-service";
 import { toast } from "../../../utils/functions/swal";
-import { useNavigate, useParams } from "react-router-dom";
-import { getVehicleImage } from "../../../utils/functions/vehicle";
+import { useNavigate } from "react-router-dom";
 
-const AdminVehicleEdit = () => {
+const AdminVehicleNew = () => {
   const [imageSrc, setImageSrc] = useState("");
-  const [saving, setSaving] = useState(false);
-  const [deleting, setDeleting] = useState(false);
   const [loading, setLoading] = useState(false);
   const fileImageRef = useRef();
   const navigate = useNavigate();
-  const { vehicleId } = useParams();
 
-  const [initialValues, setInitialValues] = useState({
+  const initialValues = {
     model: "",
     doors: "",
     seats: "",
@@ -28,9 +35,7 @@ const AdminVehicleEdit = () => {
     age: "",
     pricePerHour: "",
     image: "",
-  })
-
-
+  };
 
   const validationSchema = Yup.object({
     model: Yup.string().required("Please enter the model"),
@@ -51,23 +56,30 @@ const AdminVehicleEdit = () => {
     setLoading(true);
 
     try {
-     
+      const formData = new FormData();
+      formData.append("file", values.image);
 
+      const resp = await uploadVehicleImage(formData);
+      const imageId = resp.data.imageId;
+
+      const payload = { ...values };
+      delete payload.image;
+
+      await createVehicle(imageId, payload);
+      toast("Vehicle was created", "success");
+      navigate(-1);
     } catch (err) {
       console.log(err);
       toast(err.response.data.message, "error");
-    }
-    finally{
+    } finally {
       setLoading(false);
     }
-
   };
 
   const formik = useFormik({
     initialValues,
     validationSchema,
     onSubmit,
-    enableReinitialize: true
   });
 
   const handleSelectImage = () => {
@@ -77,7 +89,7 @@ const AdminVehicleEdit = () => {
     const file = fileImageRef.current.files[0];
     if (!file) return;
 
-    formik.setFieldValue("image", file); 
+    formik.setFieldValue("image", file);
     //formik state ini manuel olarak set ettik.Seçilen dosyayı image alanına yerleştirdik.
 
     const reader = new FileReader(); //Seçilen görüntüyü ekrana yerleştirdik
@@ -88,38 +100,9 @@ const AdminVehicleEdit = () => {
     };
   };
 
-
-  const loadData = async () => { 
-    setLoading(true);
-
-    try {
-      const resp = await getVehicle(vehicleId);
-      setInitialValues(resp.data);
-      setImageSrc(getVehicleImage(resp.data.image));
-
-    } catch (err) {
-      console.log(err);
-    }
-    finally{
-      setLoading(false);
-    }
-
-   }
-
-  const handleDelete = () => { 
-    
-
-   }
-
   const isError = (field) => {
     return formik.touched[field] && formik.errors[field];
   };
-
-  useEffect(() => {
-    loadData();
-  }, [])
-  
-
   return (
     <Form noValidate onSubmit={formik.handleSubmit}>
       <Row>
@@ -131,7 +114,7 @@ const AdminVehicleEdit = () => {
             onChange={handleImageChange}
             ref={fileImageRef}
           />
-          <img src={imageSrc} className="img-fluid"/>
+          <img src={imageSrc} className="img-fluid" />
           {formik.errors.image && (
             <Badge bg="danger" className="image-area-error">
               Please select an image
@@ -263,15 +246,11 @@ const AdminVehicleEdit = () => {
           </Row>
         </Col>
       </Row>
-
-      {initialValues.builtIn && (
-        <Alert variant="danger" className="mt-5">
-          Built-in vehicles can not be deleted and updated
-        </Alert>
-      )}
-
       <div className="text-end">
         <ButtonGroup aria-label="Basic example">
+          <Button variant="primary" type="submit" disabled={loading}>
+            {loading && <Spinner animation="border" size="sm" />} Create
+          </Button>
           <Button
             variant="secondary"
             type="button"
@@ -279,25 +258,10 @@ const AdminVehicleEdit = () => {
           >
             Cancel
           </Button>
-          {!initialValues.builtIn && (
-            <>
-              <Button variant="primary" type="submit" disabled={saving}>
-                {saving && <Spinner animation="border" size="sm" />} Update
-              </Button>
-              <Button
-                variant="danger"
-                type="button"
-                disabled={deleting}
-                onClick={handleDelete}
-              >
-                {deleting && <Spinner animation="border" size="sm" />} Delete
-              </Button>
-            </>
-          )}
         </ButtonGroup>
       </div>
     </Form>
   );
 };
 
-export default AdminVehicleEdit;
+export default AdminVehicleNew;

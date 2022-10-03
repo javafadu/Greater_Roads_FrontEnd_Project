@@ -1,7 +1,12 @@
-import React from "react";
+import React from 'react'
+import AdminVehicleNew from '../../components/admins/vehicles/admin-vehicle-new'
 
 const AdminVehicleNewPage = () => {
-  return <div>AdminVehicleNewPage</div>;
-};
+  return (
+    <>
+      <AdminVehicleNew/>
+    </>
+  )
+}
 
-export default AdminVehicleNewPage;
+export default AdminVehicleNewPage

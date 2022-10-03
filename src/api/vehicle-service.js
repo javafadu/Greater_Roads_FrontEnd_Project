@@ -42,3 +42,37 @@ export const downloadVehicles = () => {
     responseType: "blob",
   });
 };
+
+export const uploadVehicleImage = (image) => {
+  return axios.post(`${API_URL}/files/upload`, image, {
+    headers: { ...authHeader(), "Content-Type": "multipart/form-data" },
+  });
+};
+
+export const deleteVehicleImage = (id) => {
+  return axios.delete(`${API_URL}/files/${id}`, {
+    headers: authHeader(),
+  });
+};
+
+export const createVehicle = (imageId, vehicle) => {
+  return axios.post(`${API_URL}/car/admin/${imageId}/add`, vehicle, {
+    headers: authHeader(),
+  });
+};
+
+export const deleteVehicleById = (id) => {
+  return axios.delete(`${API_URL}/car/admin/${id}/auth`, {
+    headers: authHeader(),
+  });
+};
+
+export const updateVehicle = (imageId, vehicleId, vehicle) => {
+  return axios.put(
+    `${API_URL}/car/admin/auth?id=${vehicleId}&imageId=${imageId}`,
+    vehicle,
+    {
+      headers: authHeader(),
+    }
+  );
+};

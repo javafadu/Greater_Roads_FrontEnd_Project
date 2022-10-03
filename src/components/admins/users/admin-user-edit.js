@@ -12,11 +12,17 @@ import {
 } from "react-bootstrap";
 import * as Yup from "yup";
 import ReactInputMask from "react-input-mask-next";
-import { getUserById } from "../../../api/user-service";
+import {
+  deleteUserById,
+  getUserById,
+  updateUserById,
+} from "../../../api/user-service";
+import Loading from "../../common/loading/loading";
+import { question, toast } from "../../../utils/functions/swal";
 
 const AdminUserEdit = () => {
   const [saving, setSaving] = useState(false);
-  const [deleting, setdeleting] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const { userId } = useParams();
@@ -46,7 +52,25 @@ const AdminUserEdit = () => {
     password: Yup.string(),
   });
 
-  const onSubmit = () => {};
+  const onSubmit = async (values) => {
+    console.log(values);
+    setSaving(true);
+
+    const data = { ...values };
+    if (!data.password) {
+      delete data.password;
+    }
+    console.log(data);
+
+    try {
+      await updateUserById(userId, data);
+      toast("User was updated", "success");
+    } catch (err) {
+      toast(err.response.data.message, "error");
+    } finally {
+      setSaving(false);
+    }
+  };
 
   const formik = useFormik({
     initialValues,
@@ -67,11 +91,37 @@ const AdminUserEdit = () => {
     }
   };
 
+  const removeUser = async () => {
+    setDeleting(true);
+    try {
+      await deleteUserById(userId);
+      toast("User was deleted", "success");
+      navigate("/admin/users");
+    } catch (err) {
+      toast(err.response.data.message, "error");
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const handleDelete = () => {
+    question(
+      "Are you sure to delete?",
+      "You won't be able to revert this!"
+    ).then((result) => {
+      if (result.isConfirmed) {
+        removeUser();
+      }
+    });
+  };
+
   useEffect(() => {
     loadData();
   }, []);
 
-  return (
+  return loading ? (
+    <Loading />
+  ) : (
     <Form noValidate onSubmit={formik.handleSubmit}>
       <Row>
         <Form.Group as={Col} md={6} lg={4} className="mb-3">
@@ -208,7 +258,12 @@ const AdminUserEdit = () => {
               <Button variant="primary" type="submit" disabled={saving}>
                 {saving && <Spinner animation="border" size="sm" />} Update
               </Button>
-              <Button variant="danger" type="button" disabled={deleting}>
+              <Button
+                variant="danger"
+                type="button"
+                disabled={deleting}
+                onClick={handleDelete}
+              >
                 {deleting && <Spinner animation="border" size="sm" />} Delete
               </Button>
             </>
