@@ -21,6 +21,10 @@ export const getDate = (dateTime) => {
   return moment(dateTime).format("YYYY-MM-DD");
 };
 
+export const getTime = (dateTime) => {
+  return moment(dateTime).format("HH:mm");
+};
+
 export const checkDates = (dates) => {
   const { pickUpDate, pickUpTime, dropOffDate, dropOffTime } = dates;
 

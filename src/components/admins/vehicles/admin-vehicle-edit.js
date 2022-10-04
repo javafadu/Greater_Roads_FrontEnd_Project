@@ -1,12 +1,31 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { Form, Button, Row, Col, ButtonGroup, Badge, Spinner, Alert } from "react-bootstrap";
+import {
+  Form,
+  Button,
+  Row,
+  Col,
+  ButtonGroup,
+  Badge,
+  Spinner,
+  Alert,
+} from "react-bootstrap";
 import "./admin-vehicle.scss";
-import { createVehicle, getVehicle, uploadVehicleImage } from "../../../api/vehicle-service";
-import { toast } from "../../../utils/functions/swal";
+import {
+  createVehicle,
+  deleteVehicleById,
+  deleteVehicleImage,
+  getVehicle,
+  updateVehicle,
+  uploadVehicleImage,
+} from "../../../api/vehicle-service";
+import { question, toast } from "../../../utils/functions/swal";
 import { useNavigate, useParams } from "react-router-dom";
 import { getVehicleImage } from "../../../utils/functions/vehicle";
+import Loading from "../../common/loading/loading";
+
+let isImageChanged = false;
 
 const AdminVehicleEdit = () => {
   const [imageSrc, setImageSrc] = useState("");
@@ -28,9 +47,7 @@ const AdminVehicleEdit = () => {
     age: "",
     pricePerHour: "",
     image: "",
-  })
-
-
+  });
 
   const validationSchema = Yup.object({
     model: Yup.string().required("Please enter the model"),
@@ -48,26 +65,43 @@ const AdminVehicleEdit = () => {
   });
 
   const onSubmit = async (values) => {
-    setLoading(true);
+    setSaving(true);
 
     try {
-     
+      let imageId = values.image[0];
 
+      // isImageChanged görüntü değiştirildiğinde true olacak
+      if (isImageChanged) {
+        // Mevcut image database den siliniyor
+        await deleteVehicleImage(imageId);
+
+        const newImageFile = fileImageRef.current.files[0];
+        const formData = new FormData();
+        formData.append("file", newImageFile);
+
+        const resp = await uploadVehicleImage(formData);
+        imageId = resp.data.imageId;
+        isImageChanged = false;
+      }
+
+      const payload = { ...values };
+      delete payload.image;
+
+      await updateVehicle(imageId, vehicleId, payload);
+      toast("Vehicle was updated", "success");
     } catch (err) {
       console.log(err);
       toast(err.response.data.message, "error");
+    } finally {
+      setSaving(false);
     }
-    finally{
-      setLoading(false);
-    }
-
   };
 
   const formik = useFormik({
     initialValues,
     validationSchema,
     onSubmit,
-    enableReinitialize: true
+    enableReinitialize: true,
   });
 
   const handleSelectImage = () => {
@@ -77,39 +111,53 @@ const AdminVehicleEdit = () => {
     const file = fileImageRef.current.files[0];
     if (!file) return;
 
-    formik.setFieldValue("image", file); 
-    //formik state ini manuel olarak set ettik.Seçilen dosyayı image alanına yerleştirdik.
-
     const reader = new FileReader(); //Seçilen görüntüyü ekrana yerleştirdik
     reader.readAsDataURL(file);
 
     reader.onloadend = () => {
       setImageSrc(reader.result);
     };
+
+    isImageChanged = true;
   };
 
-
-  const loadData = async () => { 
+  const loadData = async () => {
     setLoading(true);
 
     try {
       const resp = await getVehicle(vehicleId);
       setInitialValues(resp.data);
       setImageSrc(getVehicleImage(resp.data.image));
-
     } catch (err) {
       console.log(err);
-    }
-    finally{
+    } finally {
       setLoading(false);
     }
+  };
 
-   }
+  const removeVehicle = async () => {
+    setDeleting(true);
+    try {
+      await deleteVehicleById(vehicleId);
+      toast("Vehicle was deleted", "success");
+      navigate(-1);
+    } catch (err) {
+      toast(err.response.data.message, "error");
+    } finally {
+      setDeleting(false);
+    }
+  };
 
-  const handleDelete = () => { 
-    
-
-   }
+  const handleDelete = () => {
+    question(
+      "Are you sure to delete?",
+      "You won't be able to revert this!"
+    ).then((result) => {
+      if (result.isConfirmed) {
+        removeVehicle();
+      }
+    });
+  };
 
   const isError = (field) => {
     return formik.touched[field] && formik.errors[field];
@@ -117,152 +165,155 @@ const AdminVehicleEdit = () => {
 
   useEffect(() => {
     loadData();
-  }, [])
-  
+  }, []);
 
-  return (
+  return loading ? (
+    <Loading />
+  ) : (
     <Form noValidate onSubmit={formik.handleSubmit}>
-      <Row>
-        <Col xl={3} className="image-area">
-          <Form.Control
-            type="file"
-            name="image"
-            className="d-none"
-            onChange={handleImageChange}
-            ref={fileImageRef}
-          />
-          <img src={imageSrc} className="img-fluid"/>
-          {formik.errors.image && (
-            <Badge bg="danger" className="image-area-error">
-              Please select an image
-            </Badge>
-          )}
-          <Button
-            variant={formik.errors.image ? "danger" : "primary"}
-            onClick={handleSelectImage}
-          >
-            Select Image
-          </Button>
-        </Col>
-        <Col xl={9}>
-          <Row>
-            <Form.Group as={Col} md={4} lg={3} className="mb-3">
-              <Form.Label>Model</Form.Label>
-              <Form.Control
-                type="text"
-                {...formik.getFieldProps("model")}
-                className={isError("model") && "is-invalid"}
-              />
-              <Form.Control.Feedback type="invalid">
-                {formik.errors.model}
-              </Form.Control.Feedback>
-            </Form.Group>
-            <Form.Group as={Col} md={4} lg={3} className="mb-3">
-              <Form.Label>Doors</Form.Label>
-              <Form.Control
-                type="number"
-                {...formik.getFieldProps("doors")}
-                className={isError("doors") && "is-invalid"}
-              />
-              <Form.Control.Feedback type="invalid">
-                {formik.errors.doors}
-              </Form.Control.Feedback>
-            </Form.Group>
-            <Form.Group as={Col} md={4} lg={3} className="mb-3">
-              <Form.Label>Seats</Form.Label>
-              <Form.Control
-                type="number"
-                {...formik.getFieldProps("seats")}
-                className={isError("seats") && "is-invalid"}
-              />
-              <Form.Control.Feedback type="invalid">
-                {formik.errors.seats}
-              </Form.Control.Feedback>
-            </Form.Group>
-            <Form.Group as={Col} md={4} lg={3} className="mb-3">
-              <Form.Label>Luggage</Form.Label>
-              <Form.Control
-                type="number"
-                {...formik.getFieldProps("luggage")}
-                className={isError("luggage") && "is-invalid"}
-              />
-              <Form.Control.Feedback type="invalid">
-                {formik.errors.luggage}
-              </Form.Control.Feedback>
-            </Form.Group>
-            <Form.Group as={Col} md={4} lg={3} className="mb-3">
-              <Form.Label>Transmission</Form.Label>
-              <Form.Select
-                {...formik.getFieldProps("transmission")}
-                className={isError("transmission") && "is-invalid"}
-              >
-                <option>Select</option>
-                <option value="Automatic">Automatic</option>
-                <option value="Manuel">Manuel</option>
-                <option value="Tiptronic">Tiptronic</option>
-              </Form.Select>
-              <Form.Control.Feedback type="invalid">
-                {formik.errors.transmission}
-              </Form.Control.Feedback>
-            </Form.Group>
-            <Form.Group as={Col} md={4} lg={3} className="mb-3">
-              <Form.Label>Air Conditioning</Form.Label>
-              <Form.Select
-                {...formik.getFieldProps("airConditioning")}
-                className={isError("airConditioning") && "is-invalid"}
-              >
-                <option>Select</option>
-                <option value={true}>Yes</option>
-                <option value={false}>No</option>
-              </Form.Select>
-              <Form.Control.Feedback type="invalid">
-                {formik.errors.airConditioning}
-              </Form.Control.Feedback>
-            </Form.Group>
-            <Form.Group as={Col} md={4} lg={3} className="mb-3">
-              <Form.Label>Fuel Type</Form.Label>
-              <Form.Select
-                {...formik.getFieldProps("fuelType")}
-                className={isError("fuelType") && "is-invalid"}
-              >
-                <option>Select</option>
-                <option value="Electricity">Electricity</option>
-                <option value="Hybrid">Hybrid</option>
-                <option value="Gasoline">Gasoline</option>
-                <option value="Diesel">Diesel</option>
-                <option value="Hydrogen">Hydrogen</option>
-                <option value="LPG">LPG</option>
-                <option value="CNG">CNG</option>
-              </Form.Select>
-              <Form.Control.Feedback type="invalid">
-                {formik.errors.fuelType}
-              </Form.Control.Feedback>
-            </Form.Group>
-            <Form.Group as={Col} md={4} lg={3} className="mb-3">
-              <Form.Label>Age</Form.Label>
-              <Form.Control
-                type="number"
-                {...formik.getFieldProps("age")}
-                className={isError("age") && "is-invalid"}
-              />
-              <Form.Control.Feedback type="invalid">
-                {formik.errors.age}
-              </Form.Control.Feedback>
-            </Form.Group>
-            <Form.Group as={Col} md={4} lg={3} className="mb-3">
-              <Form.Label>Price Per Hour</Form.Label>
-              <Form.Control
-                type="number"
-                {...formik.getFieldProps("pricePerHour")}
-                className={isError("pricePerHour") && "is-invalid"}
-              />
-              <Form.Control.Feedback type="invalid">
-                {formik.errors.pricePerHour}
-              </Form.Control.Feedback>
-            </Form.Group>
-          </Row>
-        </Col>
-      </Row>
+      <fieldset disabled={initialValues.builtIn}>
+        <Row>
+          <Col xl={3} className="image-area">
+            <Form.Control
+              type="file"
+              name="image"
+              className="d-none"
+              onChange={handleImageChange}
+              ref={fileImageRef}
+            />
+            <img src={imageSrc} className="img-fluid" />
+            {formik.errors.image && (
+              <Badge bg="danger" className="image-area-error">
+                Please select an image
+              </Badge>
+            )}
+            <Button
+              variant={formik.errors.image ? "danger" : "primary"}
+              onClick={handleSelectImage}
+            >
+              Select Image
+            </Button>
+          </Col>
+          <Col xl={9}>
+            <Row>
+              <Form.Group as={Col} md={4} lg={3} className="mb-3">
+                <Form.Label>Model</Form.Label>
+                <Form.Control
+                  type="text"
+                  {...formik.getFieldProps("model")}
+                  className={isError("model") && "is-invalid"}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors.model}
+                </Form.Control.Feedback>
+              </Form.Group>
+              <Form.Group as={Col} md={4} lg={3} className="mb-3">
+                <Form.Label>Doors</Form.Label>
+                <Form.Control
+                  type="number"
+                  {...formik.getFieldProps("doors")}
+                  className={isError("doors") && "is-invalid"}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors.doors}
+                </Form.Control.Feedback>
+              </Form.Group>
+              <Form.Group as={Col} md={4} lg={3} className="mb-3">
+                <Form.Label>Seats</Form.Label>
+                <Form.Control
+                  type="number"
+                  {...formik.getFieldProps("seats")}
+                  className={isError("seats") && "is-invalid"}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors.seats}
+                </Form.Control.Feedback>
+              </Form.Group>
+              <Form.Group as={Col} md={4} lg={3} className="mb-3">
+                <Form.Label>Luggage</Form.Label>
+                <Form.Control
+                  type="number"
+                  {...formik.getFieldProps("luggage")}
+                  className={isError("luggage") && "is-invalid"}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors.luggage}
+                </Form.Control.Feedback>
+              </Form.Group>
+              <Form.Group as={Col} md={4} lg={3} className="mb-3">
+                <Form.Label>Transmission</Form.Label>
+                <Form.Select
+                  {...formik.getFieldProps("transmission")}
+                  className={isError("transmission") && "is-invalid"}
+                >
+                  <option>Select</option>
+                  <option value="Automatic">Automatic</option>
+                  <option value="Manuel">Manuel</option>
+                  <option value="Tiptronic">Tiptronic</option>
+                </Form.Select>
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors.transmission}
+                </Form.Control.Feedback>
+              </Form.Group>
+              <Form.Group as={Col} md={4} lg={3} className="mb-3">
+                <Form.Label>Air Conditioning</Form.Label>
+                <Form.Select
+                  {...formik.getFieldProps("airConditioning")}
+                  className={isError("airConditioning") && "is-invalid"}
+                >
+                  <option>Select</option>
+                  <option value={true}>Yes</option>
+                  <option value={false}>No</option>
+                </Form.Select>
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors.airConditioning}
+                </Form.Control.Feedback>
+              </Form.Group>
+              <Form.Group as={Col} md={4} lg={3} className="mb-3">
+                <Form.Label>Fuel Type</Form.Label>
+                <Form.Select
+                  {...formik.getFieldProps("fuelType")}
+                  className={isError("fuelType") && "is-invalid"}
+                >
+                  <option>Select</option>
+                  <option value="Electricity">Electricity</option>
+                  <option value="Hybrid">Hybrid</option>
+                  <option value="Gasoline">Gasoline</option>
+                  <option value="Diesel">Diesel</option>
+                  <option value="Hydrogen">Hydrogen</option>
+                  <option value="LPG">LPG</option>
+                  <option value="CNG">CNG</option>
+                </Form.Select>
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors.fuelType}
+                </Form.Control.Feedback>
+              </Form.Group>
+              <Form.Group as={Col} md={4} lg={3} className="mb-3">
+                <Form.Label>Age</Form.Label>
+                <Form.Control
+                  type="number"
+                  {...formik.getFieldProps("age")}
+                  className={isError("age") && "is-invalid"}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors.age}
+                </Form.Control.Feedback>
+              </Form.Group>
+              <Form.Group as={Col} md={4} lg={3} className="mb-3">
+                <Form.Label>Price Per Hour</Form.Label>
+                <Form.Control
+                  type="number"
+                  {...formik.getFieldProps("pricePerHour")}
+                  className={isError("pricePerHour") && "is-invalid"}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors.pricePerHour}
+                </Form.Control.Feedback>
+              </Form.Group>
+            </Row>
+          </Col>
+        </Row>
+      </fieldset>
 
       {initialValues.builtIn && (
         <Alert variant="danger" className="mt-5">

@@ -1,7 +1,9 @@
 import React from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import AdminReservationEdit from '../components/admins/reservations/admin-reservation-edit'
 import ScrollToTop from '../components/common/scroll-to-top/scroll-to-top'
 import AdminDashboardPage from '../pages/admins/admin-dashboard-page'
+import AdminReservationsPage from '../pages/admins/admin-reservations-page'
 import AdminUserEditPage from '../pages/admins/admin-user-edit-page'
 import AdminUsersPage from '../pages/admins/admin-users-page'
 import AdminVehicleEditPage from '../pages/admins/admin-vehicle-edit-page'
@@ -52,6 +54,7 @@ const CustomRoutes = () => {
 
                 <Route path="admin">
                   <Route index element={<ProtectedRoute admin={true}><AdminTemplate><AdminDashboardPage/></AdminTemplate></ProtectedRoute>}/>
+                  
                   <Route path="users">
                     <Route index element={<ProtectedRoute admin={true}><AdminTemplate><AdminUsersPage/></AdminTemplate></ProtectedRoute>}/>
                     <Route path=":userId" element={<ProtectedRoute admin={true}><AdminTemplate><AdminUserEditPage/></AdminTemplate></ProtectedRoute>}/>
@@ -61,6 +64,12 @@ const CustomRoutes = () => {
                     <Route index element={<ProtectedRoute admin={true}><AdminTemplate><AdminVehiclesPage/></AdminTemplate></ProtectedRoute>}/>
                     <Route path=":vehicleId" element={<ProtectedRoute admin={true}><AdminTemplate><AdminVehicleEditPage/></AdminTemplate></ProtectedRoute>}/>
                     <Route path="new" element={<ProtectedRoute admin={true}><AdminTemplate><AdminVehicleNewPage/></AdminTemplate></ProtectedRoute>}/>
+                  </Route>
+
+
+                  <Route path="reservations">
+                    <Route index element={<ProtectedRoute admin={true}><AdminTemplate><AdminReservationsPage/></AdminTemplate></ProtectedRoute>}/>
+                    <Route path=":reservationId" element={<ProtectedRoute admin={true}><AdminTemplate><AdminReservationEdit/></AdminTemplate></ProtectedRoute>}/>
                   </Route>
                 </Route>
 
