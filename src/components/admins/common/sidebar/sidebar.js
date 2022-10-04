@@ -51,7 +51,7 @@ const SideBar = () => {
             <Nav.Link as={Link} to="/admin/reservations">
               <RiFileList3Line /> Reservations
             </Nav.Link>
-            <Nav.Link as={Link} to="/admin/contect-messages">
+            <Nav.Link as={Link} to="/admin/contact-messages">
               <RiCarLine /> Contact Messages
             </Nav.Link>
             <Nav.Link as={Link} to="/">

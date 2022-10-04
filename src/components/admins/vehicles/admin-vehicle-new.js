@@ -114,7 +114,7 @@ const AdminVehicleNew = () => {
             onChange={handleImageChange}
             ref={fileImageRef}
           />
-          <img src={imageSrc} className="img-fluid" />
+          <img src={imageSrc} className="img-fluid" alt="..." />
           {formik.errors.image && (
             <Badge bg="danger" className="image-area-error">
               Please select an image

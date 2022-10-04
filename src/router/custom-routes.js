@@ -2,6 +2,8 @@ import React from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import AdminReservationEdit from '../components/admins/reservations/admin-reservation-edit'
 import ScrollToTop from '../components/common/scroll-to-top/scroll-to-top'
+import AdminContactEditPage from '../pages/admins/admin-contact-message-edit-page'
+import AdminContactMessagesPage from '../pages/admins/admin-contact-messages-page'
 import AdminDashboardPage from '../pages/admins/admin-dashboard-page'
 import AdminReservationsPage from '../pages/admins/admin-reservations-page'
 import AdminUserEditPage from '../pages/admins/admin-user-edit-page'
@@ -70,6 +72,11 @@ const CustomRoutes = () => {
                   <Route path="reservations">
                     <Route index element={<ProtectedRoute admin={true}><AdminTemplate><AdminReservationsPage/></AdminTemplate></ProtectedRoute>}/>
                     <Route path=":reservationId" element={<ProtectedRoute admin={true}><AdminTemplate><AdminReservationEdit/></AdminTemplate></ProtectedRoute>}/>
+                  </Route>
+
+                  <Route path="contact-messages">
+                    <Route index element={<ProtectedRoute admin={true}><AdminTemplate><AdminContactMessagesPage/></AdminTemplate></ProtectedRoute>}/>
+                    <Route path=":messageId" element={<ProtectedRoute admin={true}><AdminTemplate><AdminContactEditPage/></AdminTemplate></ProtectedRoute>}/>
                   </Route>
                 </Route>
 

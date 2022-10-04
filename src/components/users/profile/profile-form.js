@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import { useDispatch } from "react-redux";
+/* import { useDispatch } from "react-redux"; */
 import React, { useState } from "react";
 import { Button, Form, Spinner } from "react-bootstrap";
 import * as Yup from "yup";
@@ -9,7 +9,7 @@ import { toast } from "../../../utils/functions/swal";
 
 const ProfileForm = ({ user }) => {
   const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch();
+  /* const dispatch = useDispatch(); */
 
   const initialValues = {
     firstName: user.firstName,

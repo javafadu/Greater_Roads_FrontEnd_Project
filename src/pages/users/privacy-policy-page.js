@@ -118,7 +118,7 @@ const PrivacyPolicyPage = () => {
               from{" "}
               <a
                 href={settings.siteUrl}
-                rel="external nofollow noopener"
+                rel="external nofollow noopener noreferrer"
                 target="_blank"
               >
                 {settings.siteUrl}

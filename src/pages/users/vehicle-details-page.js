@@ -9,7 +9,7 @@ import VehicleDetails from "../../components/users/vehicle-details/vehicle-detai
 import { setVehicle } from "../../store/slices/reservation-slice";
 
 const VehicleDetailsPage = () => {
-  const vehicle = useSelector(state=> state.reservation.vehicle);
+  const vehicle = useSelector((state) => state.reservation.vehicle);
   const [loading, setLoading] = useState(true);
   const { vehicleId } = useParams();
   const dispatch = useDispatch();
@@ -27,11 +27,12 @@ const VehicleDetailsPage = () => {
 
   useEffect(() => {
     loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <>
-      <PageHeader title={vehicle?.model}/>
+      <PageHeader title={vehicle?.model} />
       <Spacer />
       {loading ? <Loading /> : <VehicleDetails />}
 

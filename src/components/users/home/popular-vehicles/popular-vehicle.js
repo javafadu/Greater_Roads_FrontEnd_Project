@@ -46,6 +46,7 @@ const PopularVehicle = (props) => {
 
   useEffect(() => {
     loadImage();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeVehicle]);
 
   return (

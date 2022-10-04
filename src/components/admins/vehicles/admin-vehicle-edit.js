@@ -165,6 +165,7 @@ const AdminVehicleEdit = () => {
 
   useEffect(() => {
     loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return loading ? (
@@ -181,7 +182,7 @@ const AdminVehicleEdit = () => {
               onChange={handleImageChange}
               ref={fileImageRef}
             />
-            <img src={imageSrc} className="img-fluid" />
+            <img src={imageSrc} className="img-fluid" alt="..." />
             {formik.errors.image && (
               <Badge bg="danger" className="image-area-error">
                 Please select an image
