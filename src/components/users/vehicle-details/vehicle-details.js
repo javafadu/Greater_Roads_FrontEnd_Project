@@ -39,7 +39,11 @@ const VehicleDetails = () => {
           </div>
 
           <Card>
-            <img src={getVehicleImage(image)} className="img-fluid" alt="..."/>
+            <img
+              src={getVehicleImage(image)}
+              className="img-fluid"
+              alt={model}
+            />
           </Card>
           <Spacer height={30} />
 

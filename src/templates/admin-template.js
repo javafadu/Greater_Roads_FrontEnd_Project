@@ -6,7 +6,7 @@ const AdminTemplate = (props) => {
   const { children } = props;
 
   return (
-    <Container fluid>
+    <Container fluid className="p-0 overflow-hidden">
       <Row>
         <Col lg={3}>
           <SideBar />

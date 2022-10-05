@@ -116,11 +116,7 @@ const PrivacyPolicyPage = () => {
             <p>
               <strong>Website</strong> refers to {settings.siteName}, accessible
               from{" "}
-              <a
-                href={settings.siteUrl}
-                rel="external nofollow noopener noreferrer"
-                target="_blank"
-              >
+              <a href={settings.siteUrl} rel="noreferrer" target="_blank">
                 {settings.siteUrl}
               </a>
             </p>

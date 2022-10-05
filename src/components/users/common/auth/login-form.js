@@ -34,7 +34,7 @@ const LoginForm = () => {
       const respUser = await getUser();
 
       dispatch(loginSuccess(respUser.data));
-      navigate(-1); // Önceki sayfaya yönlendirir.
+      navigate("/"); // Go HomePage after login
     } catch (err) {
       dispatch(loginFailed());
       toast(err.response.data.message, "error");
