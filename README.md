@@ -1,6 +1,6 @@
-# Greater Roads
+#Car Rental - Front-end Project
 
-This project was developed by Techproeducation students
+This is a Reacj JS Project
 
 ## Swagger Documentation
 Open [https://carrental-v2-backend.herokuapp.com/swagger-ui/index.html](https://carrental-v2-backend.herokuapp.com/swagger-ui/index.html) to view it in your browser.
